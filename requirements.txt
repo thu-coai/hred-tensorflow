@@ -1,3 +1,2 @@
 tensorboardX
 tensorflow==1.13.1
-torch>=1.0.0
