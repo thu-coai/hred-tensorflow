@@ -1,0 +1,22 @@
+# Compiled python modules.
+*.pyc
+__pycache__
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+.vscode
+*.swp
+
+# Report files
+.cotk_upload_backup
+result.json
+
+# docs file
+docs/build
+!docs/build/LICENSE.txt
+!docs/build/README.md
+docs/source/models

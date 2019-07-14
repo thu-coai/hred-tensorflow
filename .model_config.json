@@ -1,0 +1,1 @@
+{"entry": "run", "args": ["--datapath", "resources://MSCOCO_small", "--wvpath", "resources://Glove50d_small", "--epoch", "1", "--batch_per_epoch", "10", "--mode", "test"], "cotk_record_information": {}, "working_dir": ""}
