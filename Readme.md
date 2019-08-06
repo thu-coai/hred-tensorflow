@@ -1,3 +1,5 @@
+[![Main Repo](https://img.shields.io/badge/Main_project-cotk-blue.svg?logo=github)](https://github.com/thu-coai/cotk)
+[![This Repo](https://img.shields.io/badge/Model_repo-hred--tensorflow-blue.svg?logo=github)](https://github.com/thu-coai/hred-tensorflow)
 [![Coverage Status](https://coveralls.io/repos/github/thu-coai/hred-tensorflow/badge.svg?branch=master)](https://coveralls.io/github/thu-coai/hred-tensorflow?branch=master)
 [![Build Status](https://travis-ci.com/thu-coai/hred-tensorflow.svg?branch=master)](https://travis-ci.com/thu-coai/hred-tensorflow)
 
