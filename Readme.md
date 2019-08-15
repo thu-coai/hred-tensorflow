@@ -3,8 +3,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/thu-coai/hred-tensorflow/badge.svg?branch=master)](https://coveralls.io/github/thu-coai/hred-tensorflow?branch=master)
 [![Build Status](https://travis-ci.com/thu-coai/hred-tensorflow.svg?branch=master)](https://travis-ci.com/thu-coai/hred-tensorflow)
 
-This is a model from cotk, click here to our [main repo](https://github.com/thu-coai/cotk).
-
 ## HRED (TensorFlow)
 
 HRED is a basic model for multiple turn dialog. Here, we implement HRED with attention mechanism. You can refer to the following papers for details:
