@@ -5,7 +5,7 @@
 
 ## HRED (TensorFlow)
 
-HRED is a basic model for multiple turn dialog. Here, we implement HRED with attention mechanism. You can refer to the following papers for details:
+HRED is a basic model for multiple turn dialog. The model originates from seq2seq, moreover, HRED adds an intermediate layer RNN to remember the relatation between sentenses. Here, we implement HRED with attention mechanism. You can refer to the following paper for details:
 
 Serban, I. V., Sordoni, A., Bengio, Y., Courville, A. C., & Pineau, J. (2016, February). Building End-To-End Dialogue Systems Using Generative Hierarchical Neural Network Models. In *AAAI* (Vol. 16, pp. 3776-3784).
 
@@ -20,16 +20,17 @@ Serban, I. V., Sordoni, A., Bengio, Y., Courville, A. C., & Pineau, J. (2016, Fe
 
 * Downloading dataset and save it to ``./data``. (Dataset will be released soon.)
 * Execute ``python run.py`` to train the model.
-  * The default dataset is ``UbuntuCorpus``. You can use ``--dataset`` to specify other ``dataloader`` class.
+  * The default dataset is ``Ubuntu``. You can use ``--dataset`` to specify other ``dataloader`` class.
   * It don't use pretrained word vector by default setting. You can use ``--wvclass`` to specify ``wordvector`` class. For example: ``--wvclass gloves``
   * If you don't have GPUs, you can add `--cpu` for switching to CPU, but it may cost very long time.
 * You can view training process by tensorboard, the log is at `./tensorboard`.
   * For example, ``tensorboard --logdir=./tensorboard``. (You have to install tensorboard first.)
 * After training, execute  ``python run.py --mode test --restore best`` for test.
   * You can use ``--restore filename`` to specify checkpoints files, which are in ``./model``.
-  * ``--restore last`` means last checkpoint, ``--restore best`` means best checkpoints on dev.
+  * ``--restore last`` means last checkpoint, ``--restore best`` means best checkpoints on dev.]
+  * Because of no consideration about <unk> when training, the perplexity may be larger when testing than training if the dataset you use has many invalid vocabularies.
 * Find results at ``./output``.
-
+* For example, if you use the ``Ubuntu_small`` as the dataset, and simultaneously, set the ``Glove50d_small`` as the wordvector, the parameters will be preferable if you set ``args.lr``, which is the monogram of "learning rate", to 1e-4 and ``args.lr_decay`` to 0.95 in the file "run.py".
 ### Arguments
 
 ```none
@@ -50,7 +51,7 @@ Serban, I. V., Sordoni, A., Bengio, Y., Courville, A. C., & Pineau, J. (2016, Fe
                             "best" for best checkpoints on dev. Attention: "last"
                             and "best" wiil cause unexpected behaviour when run 2
                             models in the same dir at the same time. Default: None
-                            (dont load anything)
+                            (dont load anything, however, if you set the ``model_dir``, the ``restore`` will be "last")
       --mode MODE           "train" or "test". Default: train
       --dataset DATASET     Dataloader class. Default: OpenSubtitles
       --datapath DATAPATH   Directory for data set. Default: ./data
