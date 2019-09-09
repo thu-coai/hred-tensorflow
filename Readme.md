@@ -5,7 +5,7 @@
 
 ## HRED (TensorFlow)
 
-HRED is a basic model for multiple turn dialog. The model originates from seq2seq, moreover, HRED adds an intermediate layer RNN to remember the relatation between sentenses. Here, we implement HRED with attention mechanism. You can refer to the following paper for details:
+HRED is a basic model for multiple turn dialog. The model originates from seq2seq, moreover, HRED adds an intermediate layer RNN to remember the relatation between sentenses. Here, we implement HRED with attention mechanism. You can refer to the following papers for details:
 
 Serban, I. V., Sordoni, A., Bengio, Y., Courville, A. C., & Pineau, J. (2016, February). Building End-To-End Dialogue Systems Using Generative Hierarchical Neural Network Models. In *AAAI* (Vol. 16, pp. 3776-3784).
 
