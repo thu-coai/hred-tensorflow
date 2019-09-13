@@ -134,19 +134,20 @@ gen:    I have no idea what you mean by the <eos>
 ###Subset Experiment
 
 Based on the dataset of `Ubuntu_small`(a smaller version of `Ubuntu`) and the wordvector of Glove50d_small(a smaller version of 50 dimensions of Glove), we did the following experiments.
+Note that the `dev perplexity` and the `test perplexity` are attained when training ,while the `test mode perplexity` is attained when the `mode` is "test". As you can see, the `test mode perplexity` is far larger than the `test perplexity`, because the dataset we use has many invalid vocabularies, as we have mentioned above in the `Quick Start`.
 
-| encoder | context_encoder | decoder | learning rate | dev perplexity | test perplexity |
-| :-----: | :------------------: | :--------: | :------------: | :-------------: | :--------------: |
-|   128   |   128   |    128     |    0.0001     |   60.37    |     60.41     |
-| 128 | 128 |    200     |    0.0001     |  60.92   |     60.98     |
-| 128 | 200 |    128     |    0.0001     |   60.87    |     61.08     |
-| 200 | 128 |  128  |    0.0001     |  61.90   |    61.86     |
-| 128 | 200 |  200  |    0.0001     |   61.05    |     61.06     |
-|   200   |   200   |  200  |    0.00010     |   61.76    |     61.55     |
-|   200   |   200   |  200  |    0.00011     |   61.07    |     61.24     |
-|   200   |   200   |  200  |    0.00050     |   61.14    |     61.14     |
-|   200   |   200   |  200  |    0.00080     |   61.66    |     61.51     |
-|   200   |   200   |  200  |    0.00090     |   61.89    |     61.73     |
+| encoder | context_encoder | decoder | learning rate | dev perplexity | test perplexity | test mode perplexity |
+| :-----: | :------------------: | :--------: | :------------: | :-------------: | :--------------: | :--------------: |
+|   128   |   128   |    128     |    0.0001     |   60.37    |     60.41     |  273.32 |
+| 128 | 128 |    200     |    0.0001     |  60.92   |     60.98     | 248.61  |
+| 128 | 200 |    128     |    0.0001     |   60.87    |     61.08     |  261.81 |
+| 200 | 128 |  128  |    0.0001     |  61.90   |    61.86     |  292.83 |
+| 128 | 200 |  200  |    0.0001     |   61.05    |     61.06     |  264.03 |
+| 200 | 128 |  200  |    0.0001     |   61.46    |     61.41     |  274.34 |
+| 200 | 200 |  128  |    0.0001     |   61.93    |     62.15     |  391.48 |
+|   200   |   200   |  200  |    0.00010     |   61.76    |     61.55     |  276.30 |
+|   200   |   200   |  200  |    0.00050     |   61.14    |     61.14     |  224.25 |
+|   200   |   200   |  200  |    0.00090     |   61.89    |     61.73     |  249.30 |
 
 The following experiments are based on the parameters of the first experiment.
 
