@@ -56,7 +56,7 @@ def modify_args(args):
 	args.name = 'test_hred_tensorflow'
 	args.epochs = 1
 	args.checkpoint_steps = 1
-	args.datapath = path + '/tests/dataloader/dummy_ubuntucorpus'
+	args.datapath = path + '/tests/dataloader/dummy_ubuntucorpus#Ubuntu'
 
 def test_train(mocker):
 	def side_effect_train(args):
