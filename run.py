@@ -17,8 +17,8 @@ def run(*argv):
 		help='"train" or "test". Default: train')
 	parser.add_argument('--dataset', type=str, default='UbuntuCorpus',
 		help='Dataloader class. Default: UbuntuCorpus')
-	parser.add_argument('--datapath', type=str, default='UbuntuCorpus',
-		help='Directory for data set. Default: UbuntuCorpus')
+	parser.add_argument('--datapath', type=str, default='UbuntuCorpus#Ubuntu',
+		help='Directory for data set. Default: UbuntuCorpus#Ubuntu')
 	parser.add_argument('--epoch', type=int, default=100,
 		help="Epoch for trainning. Default: 100")
 	parser.add_argument('--wvclass', type=str, default='Glove',
