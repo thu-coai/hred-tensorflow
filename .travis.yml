@@ -10,7 +10,7 @@ install:
   - pip install -r requirements.txt
   - pip install pytest>=3.6.0
   - pip install pytest-dependency pytest-mock requests-mock pytest>=3.6.0 "coverage<5.0" pytest-cov==2.4.0 python-coveralls
-  - cd .. && git clone https://github.com/thu-coai/cotk.git && pip install ./cotk --progress-bar off && cd hred-tensorflow
+  - cd .. && git clone -b version_up https://github.com/thu-coai/cotk.git && pip install ./cotk --progress-bar off && cd hred-tensorflow
 
 script:
   - pytest test_hred_tensorflow.py --cov=. --cov-report term-missing

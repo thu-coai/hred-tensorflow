@@ -33,7 +33,7 @@ class HredModel(object):
 		# build the embedding table and embedding input
 		if embed is None:
 			# initialize the embedding randomly
-			self.embed = tf.get_variable('embed', [data.vocab_size, args.embedding_size], tf.float32)
+			self.embed = tf.get_variable('embed', [data.frequent_vocab_size, args.embedding_size], tf.float32)
 		else:
 			# initialize the embedding by pre-trained word vectors
 			self.embed = tf.get_variable('embed', dtype=tf.float32, initializer=embed)
@@ -55,8 +55,8 @@ class HredModel(object):
 			_, self.context_state = cell_ctx(encoder_state, self.init_states)
 
 		# get output projection function
-		output_fn = MyDense(data.vocab_size, use_bias = True)
-		sampled_sequence_loss = output_projection_layer(args.dh_size, data.vocab_size, args.softmax_samples)
+		output_fn = MyDense(data.frequent_vocab_size, use_bias = True)
+		sampled_sequence_loss = output_projection_layer(args.dh_size, data.frequent_vocab_size, args.softmax_samples)
 
 		# construct helper and attention
 		train_helper = tf.contrib.seq2seq.TrainingHelper(self.decoder_input, tf.maximum(self.responses_length, 1))
@@ -82,7 +82,7 @@ class HredModel(object):
 					maximum_iterations=args.max_sent_length, scope = "decoder_rnn")
 			self.decoder_distribution = infer_outputs.rnn_output
 			self.generation_index = tf.argmax(tf.split(self.decoder_distribution,
-				[2, data.vocab_size-2], 2)[1], 2) + 2 # for removing UNK
+				[2, data.frequent_vocab_size-2], 2)[1], 2) + 2 # for removing UNK
 
 		# calculate the gradient of parameters and update
 		self.params = [k for k in tf.trainable_variables() if args.name in k.name]
@@ -151,33 +151,33 @@ class HredModel(object):
 		return sess.run(output_feed, input_feed)
 
 	def get_step_data(self, step_data, batched_data, turn):
-		current_batch_size = batched_data['sent'].shape[0]
-		max_turn_length = batched_data['sent'].shape[1]
-		max_sent_length = batched_data['sent'].shape[2]
+		current_batch_size = batched_data['session'].shape[0]
+		max_turn_length = batched_data['session'].shape[1]
+		max_sent_length = batched_data['session'].shape[2]
 		if turn == -1:
 			step_data['posts'] = np.zeros((current_batch_size, 1), dtype=int)
 		else:
-			step_data['posts'] = batched_data['sent'][:, turn, :]
-		step_data['responses'] = batched_data['sent'][:, turn + 1, :]
+			step_data['posts'] = batched_data['session'][:, turn, :]
+		step_data['responses'] = batched_data['session'][:, turn + 1, :]
 		step_data['posts_length'] = np.zeros((current_batch_size,), dtype=int)
 		step_data['responses_length'] = np.zeros((current_batch_size,), dtype=int)
 		for i in range(current_batch_size):
-			if turn < len(batched_data['sent_length'][i]):
+			if turn < len(batched_data['session_sent_length'][i]):
 				if turn == -1:
 					step_data['posts_length'][i] = 1
 				else:
-					step_data['posts_length'][i] = batched_data['sent_length'][i][turn]
-			if turn + 1 < len(batched_data['sent_length'][i]):
-				step_data['responses_length'][i] = batched_data['sent_length'][i][turn + 1]
+					step_data['posts_length'][i] = batched_data['session_sent_length'][i][turn]
+			if turn + 1 < len(batched_data['session_sent_length'][i]):
+				step_data['responses_length'][i] = batched_data['session_sent_length'][i][turn + 1]
 		max_posts_length = np.max(step_data['posts_length'])
 		max_responses_length = np.max(step_data['responses_length'])
 		step_data['posts'] = step_data['posts'][:, 0:max_posts_length]
 		step_data['responses'] = step_data['responses'][:, 0:max_responses_length]
 
 	def train_step(self, sess, data, args):
-		current_batch_size = data['sent'].shape[0]
-		max_turn_length = data['sent'].shape[1]
-		max_sent_length = data['sent'].shape[2]
+		current_batch_size = data['session'].shape[0]
+		max_turn_length = data['session'].shape[1]
+		max_sent_length = data['session'].shape[2]
 		loss = np.zeros((1,))
 		total_length = np.zeros((1,))
 		step_data = {}
@@ -199,9 +199,9 @@ class HredModel(object):
 		data.restart(key_name, batch_size=args.batch_size, shuffle=False)
 		batched_data = data.get_next_batch(key_name)
 		while batched_data != None:
-			current_batch_size = batched_data['sent'].shape[0]
-			max_turn_length = batched_data['sent'].shape[1]
-			max_sent_length = batched_data['sent'].shape[2]
+			current_batch_size = batched_data['session'].shape[0]
+			max_turn_length = batched_data['session'].shape[1]
+			max_sent_length = batched_data['session'].shape[2]
 			step_data = {}
 			context_states = np.zeros((current_batch_size, args.ch_size))
 			for turn in range(max_turn_length - 1):
@@ -289,9 +289,9 @@ class HredModel(object):
 		cnt = 0
 		start_time = time.time()
 		while batched_data != None:
-			current_batch_size = batched_data['sent'].shape[0]
-			max_turn_length = batched_data['sent'].shape[1]
-			max_sent_length = batched_data['sent'].shape[2]
+			current_batch_size = batched_data['session'].shape[0]
+			max_turn_length = batched_data['session'].shape[1]
+			max_sent_length = batched_data['session'].shape[2]
 			if cnt > 0 and cnt % 10 == 0:
 				print('processing %d batch data, time cost %.2f s/batch' % (cnt, (time.time() - start_time) / 10))
 				start_time = time.time()
@@ -325,26 +325,26 @@ class HredModel(object):
 
 			sent_length = []
 			for i in range(current_batch_size):
-				sent_length.append(np.array(batched_data['sent_length'][i])+1)
+				sent_length.append(np.array(batched_data['session_sent_length'][i])+1)
 			batched_sent = np.zeros((current_batch_size, max_turn_length, max_sent_length + 2), dtype=int)
 			empty_sent = np.zeros((current_batch_size, 1, max_sent_length + 2), dtype=int)
 			for i in range(current_batch_size):
 				for j, _ in enumerate(sent_length[i]):
 					batched_sent[i][j][0] = data.go_id
-					batched_sent[i][j][1:sent_length[i][j]] = batched_data['sent'][i][j][0:sent_length[i][j]-1]
+					batched_sent[i][j][1:sent_length[i][j]] = batched_data['session'][i][j][0:sent_length[i][j]-1]
 				empty_sent[i][0][0] = data.go_id
 				empty_sent[i][0][1] = data.eos_id
 
 			metric1_data = {
-					'sent_allvocabs': batched_data['sent_allvocabs'],
-					'sent_length': batched_data['sent_length'],
+					'sent_allvocabs': batched_data['session_allvocabs'],
+					'sent_length': batched_data['session_sent_length'],
 					'multi_turn_gen_log_prob': batched_gen_prob,
 					}
 			metric1.forward(metric1_data)
 			metric2_data = {
 					'context_allvocabs': [],
-					'sent_allvocabs': batched_data['sent_allvocabs'],
-					'turn_length': batched_data['turn_length'],
+					'sent_allvocabs': batched_data['session_allvocabs'],
+					'turn_length': batched_data['session_turn_length'],
 					'multi_turn_gen': batched_gen,
 					}
 			metric2.forward(metric2_data)
